@@ -1,6 +1,7 @@
-require 'jsonapi_parser/rails'
+require 'json/api'
+require 'json/api/rails'
 
-describe JsonApiParser, '#to_active_record_hash' do
+describe JSON::API::Resource, '#to_active_record_hash' do
   before(:all) do
     @payload = {
       'data' => {
@@ -30,7 +31,8 @@ describe JsonApiParser, '#to_active_record_hash' do
   end
 
   it 'works' do
-    hash = JsonApiParser.document_to_active_record_hash(@payload)
+    document = JSON::API.parse(@payload)
+    hash = document.data.to_active_record_hash
     expect(hash.keys).to eq [:id, :title, :date, :author_id, :comment_ids]
     expect(hash[:id]).to eq '1337'
     expect(hash[:title]).to eq 'Hello'
